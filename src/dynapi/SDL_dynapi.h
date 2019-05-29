@@ -53,8 +53,14 @@
 #define SDL_DYNAMIC_API 0
 #elif defined(__PSP__) && __PSP__
 #define SDL_DYNAMIC_API 0
+#elif defined(__PS4__) && __PS4__
+#define SDL_DYNAMIC_API 0
 #elif defined(__clang_analyzer__)
 #define SDL_DYNAMIC_API 0  /* Turn off for static analysis, so reports are more clear. */
+#endif
+
+#if defined(PS4)	// Apparently __PS4__ getting defined is missed somewhere, I get broken static builds so force the issue
+#define SDL_DYNAMIC_API 0
 #endif
 
 /* everyone else. This is where we turn on the API if nothing forced it off. */

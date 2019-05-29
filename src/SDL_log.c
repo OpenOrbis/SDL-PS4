@@ -299,6 +299,9 @@ SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list
         }
     }
 
+#ifdef PS4
+	printf(message);	// just fucking do it 
+#endif
     SDL_log_function(SDL_log_userdata, category, priority, message);
     SDL_stack_free(message);
 }

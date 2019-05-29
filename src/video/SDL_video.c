@@ -94,6 +94,9 @@ static VideoBootStrap *bootstrap[] = {
 #if SDL_VIDEO_DRIVER_PSP
     &PSP_bootstrap,
 #endif
+#if SDL_VIDEO_DRIVER_PS4
+	&PS4_bootstrap,
+#endif
 #if SDL_VIDEO_DRIVER_KMSDRM
     &KMSDRM_bootstrap,
 #endif
@@ -259,6 +262,7 @@ SDL_CreateWindowTexture(SDL_VideoDevice *unused, SDL_Window * window, Uint32 * f
 
     data = SDL_GetWindowData(window, SDL_WINDOWTEXTUREDATA);
     if (!data) {
+
         SDL_Renderer *renderer = NULL;
         int i;
         const char *hint = SDL_GetHint(SDL_HINT_FRAMEBUFFER_ACCELERATION);
@@ -290,12 +294,13 @@ SDL_CreateWindowTexture(SDL_VideoDevice *unused, SDL_Window * window, Uint32 * f
                 }
             }
         }
+
         if (!renderer) {
             return SDL_SetError("No hardware accelerated renderers available");
         }
 
         /* Create the data after we successfully create the renderer (bug #1116) */
-        data = (SDL_WindowTextureData *)SDL_calloc(1, sizeof(*data));
+        data = (SDL_WindowTextureData *)SDL_calloc(1, sizeof(SDL_WindowTextureData));
         if (!data) {
             SDL_DestroyRenderer(renderer);
             return SDL_OutOfMemory();
@@ -1028,7 +1033,7 @@ SDL_GetDisplay(int displayIndex)
 int
 SDL_GetWindowDisplayIndex(SDL_Window * window)
 {
-    int displayIndex;
+    int displayIndex=0;
     int i, dist;
     int closest = -1;
     int closest_dist = 0x7FFFFFFF;
@@ -1426,6 +1431,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
         h = 1;
     }
 
+
     /* Some platforms blow up if the windows are too large. Raise it later? */
     if ((w > 16384) || (h > 16384)) {
         SDL_SetError("Window is too large.");
@@ -1438,6 +1444,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
         flags |= SDL_WINDOW_OPENGL;
     }
 #endif
+
     if (flags & SDL_WINDOW_OPENGL) {
         if (!_this->GL_CreateContext) {
             SDL_SetError("OpenGL support is either not configured in SDL "
@@ -1449,6 +1456,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
             return NULL;
         }
     }
+
 
     if (flags & SDL_WINDOW_VULKAN) {
         if (!_this->Vulkan_CreateSurface) {
@@ -1466,6 +1474,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
         }
     }
 
+
     /* Unless the user has specified the high-DPI disabling hint, respect the
      * SDL_WINDOW_ALLOW_HIGHDPI flag.
      */
@@ -1480,6 +1489,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
         SDL_OutOfMemory();
         return NULL;
     }
+	
     window->magic = &_this->window_magic;
     window->id = _this->next_object_id++;
     window->x = x;
@@ -1505,6 +1515,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
     window->windowed.y = window->y;
     window->windowed.w = window->w;
     window->windowed.h = window->h;
+
 
     if (flags & SDL_WINDOW_FULLSCREEN) {
         SDL_VideoDisplay *display = SDL_GetDisplayForWindow(window);
@@ -1532,6 +1543,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
     }
     _this->windows = window;
 
+
     if (_this->CreateSDLWindow && _this->CreateSDLWindow(_this, window) < 0) {
         SDL_DestroyWindow(window);
         return NULL;
@@ -1558,6 +1570,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
     flags = window->flags;
 #endif
 
+
     if (title) {
         SDL_SetWindowTitle(window, title);
     }
@@ -1565,6 +1578,7 @@ SDL_CreateWindow(const char *title, int x, int y, int w, int h, Uint32 flags)
 
     /* If the window was created fullscreen, make sure the mode code matches */
     SDL_UpdateFullscreenMode(window, FULLSCREEN_VISIBLE(window));
+
 
     return window;
 }
@@ -2272,6 +2286,7 @@ SDL_CreateWindowFramebuffer(SDL_Window * window)
     int bpp;
     Uint32 Rmask, Gmask, Bmask, Amask;
 
+
     if (!_this->CreateWindowFramebuffer || !_this->UpdateWindowFramebuffer) {
         return NULL;
     }
@@ -2279,7 +2294,7 @@ SDL_CreateWindowFramebuffer(SDL_Window * window)
     if (_this->CreateWindowFramebuffer(_this, window, &format, &pixels, &pitch) < 0) {
         return NULL;
     }
-
+	
     if (!SDL_PixelFormatEnumToMasks(format, &bpp, &Rmask, &Gmask, &Bmask, &Amask)) {
         return NULL;
     }

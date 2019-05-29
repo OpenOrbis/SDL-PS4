@@ -146,10 +146,8 @@ extern "C"
         joystick->naxes = stick->CountAxes();
         joystick->nhats = stick->CountHats();
 
-        joystick->hwdata->new_axes = (int16 *)
-            SDL_malloc(joystick->naxes * sizeof(int16));
-        joystick->hwdata->new_hats = (uint8 *)
-            SDL_malloc(joystick->nhats * sizeof(uint8));
+        joystick->hwdata->new_axes = (int16 *)SDL_malloc(joystick->naxes * sizeof(int16));
+        joystick->hwdata->new_hats = (uint8 *)SDL_malloc(joystick->nhats * sizeof(uint8));
         if (!joystick->hwdata->new_hats || !joystick->hwdata->new_axes) {
             HAIKU_JoystickClose(joystick);
             return SDL_OutOfMemory();

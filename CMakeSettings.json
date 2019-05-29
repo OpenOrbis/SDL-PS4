@@ -1,0 +1,40 @@
+﻿{
+  "environments": [
+    {
+      // Could set things up here instead of the toolchain file, instead make this global env. and use a TOOLCHAIN var
+      //"INCLUDE": "${env.INCLUDE};",
+
+      "TOOLCHAIN_FILE": "ps4sdk.cmake",
+      "environment": "toolchain.generic"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "x64-Release",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "inheritEnvironments": [
+        "msvc_x64_x64"
+      ],
+      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": ""
+    },
+    {
+      //"variables": [ { "TOOLCHAIN_FILE": "ps4sdk.cmake" } ],   // This doesn't seem to override toolchain.generic:: [env.]TOOLCHAIN_FILE , or pass to the cmake cache
+
+      "name": "PS4 SDK",
+      "generator": "Ninja",
+      "description": "TemplateDescription_Localize_PS4SDK",
+      "configurationType": "RelWithDebInfo",
+      "inheritEnvironments": [ "toolchain.generic" ],
+      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
+      "installRoot": "D:\\dev\\orbis_sdk_500\\portlibs\\SDL",
+      "cmakeCommandArgs": "-DCMAKE_TOOLCHAIN_FILE=${projectDir}\\cmake\\ps4sdk.cmake", // ${projectDir}/cmake/${env.TOOLCHAIN_FILE}
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": ""
+    }
+  ]
+}

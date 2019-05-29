@@ -28,7 +28,9 @@
 #include <pthread_np.h>
 #endif
 
+#ifdef HAVE_SIGNAL_H
 #include <signal.h>
+#endif
 
 #ifdef __LINUX__
 #include <sys/time.h>
@@ -160,7 +162,7 @@ SDL_SYS_SetupThread(const char *name)
     }
 
    /* NativeClient does not yet support signals.*/
-#if !defined(__NACL__)
+#if !defined(__NACL__) && !defined(__ORBIS__) && !defined(PS4)
     /* Mask asynchronous signals for this thread */
     sigemptyset(&mask);
     for (i = 0; sig_list[i]; ++i) {

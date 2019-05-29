@@ -154,9 +154,15 @@
 #undef __WIN32__
 #define __WIN32__ 1
 #endif
+
 #if defined(__PSP__)
 #undef __PSP__
 #define __PSP__ 1
+#endif
+
+#if defined(__ORBIS__) || defined(PS4)
+#undef __PS4__
+#define __PS4__ 1
 #endif
 
 /* The NACL compiler defines __native_client__ and __pnacl__

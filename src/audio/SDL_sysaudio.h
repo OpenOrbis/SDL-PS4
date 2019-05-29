@@ -207,6 +207,7 @@ extern AudioBootStrap FUSIONSOUND_bootstrap;
 extern AudioBootStrap ANDROIDAUDIO_bootstrap;
 extern AudioBootStrap openslES_bootstrap;
 extern AudioBootStrap PSPAUDIO_bootstrap;
+extern AudioBootStrap PS4AUDIO_bootstrap;
 extern AudioBootStrap EMSCRIPTENAUDIO_bootstrap;
 
 #endif /* SDL_sysaudio_h_ */

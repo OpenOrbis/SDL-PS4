@@ -27,6 +27,7 @@
 #error You should not be here.
 #endif
 
+#if 0	// *FIXME* stfu wrong intellisense on VS/cmake
 #define SDL_SetError SDL_SetError_REAL
 #define SDL_Log SDL_Log_REAL
 #define SDL_LogVerbose SDL_LogVerbose_REAL
@@ -714,3 +715,4 @@
 #define SDL_RenderCopyExF SDL_RenderCopyExF_REAL
 #define SDL_GetTouchDeviceType SDL_GetTouchDeviceType_REAL
 #define SDL_UIKitRunApp SDL_UIKitRunApp_REAL
+#endif // *FIXME*
