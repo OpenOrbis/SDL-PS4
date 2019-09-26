@@ -122,7 +122,9 @@ SDL_SetError(SDL_PRINTF_FORMAT_STRING const char *fmt, ...)
     }
     va_end(ap);
 
+#ifndef PS4	// Yeah this is stupid but whatever
     if (SDL_LogGetPriority(SDL_LOG_CATEGORY_ERROR) <= SDL_LOG_PRIORITY_DEBUG) {
+#endif
         /* If we are in debug mode, print out an error message
          * Avoid stomping on the static buffer in GetError, just
          * in case this is called while processing a ShowMessageBox to
@@ -131,7 +133,11 @@ SDL_SetError(SDL_PRINTF_FORMAT_STRING const char *fmt, ...)
         char errmsg[SDL_ERRBUFIZE];
         SDL_GetErrorMsg(errmsg, sizeof(errmsg));
         SDL_LogDebug(SDL_LOG_CATEGORY_ERROR, "%s", errmsg);
+
+		printf(" FFS - %s \n", errmsg);
+#ifndef PS4
     }
+#endif
     return -1;
 }
 

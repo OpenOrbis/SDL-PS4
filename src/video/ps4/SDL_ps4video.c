@@ -21,6 +21,9 @@
 
 #include "../../SDL_internal.h"
 
+#if __INTELLISENSE__
+#define SDL_VIDEO_DRIVER_PS4 1
+#endif
 
 #if SDL_VIDEO_DRIVER_PS4
 
@@ -75,7 +78,7 @@ INLINE static uint8_t* CurrentBuffer(_THIS) { return GetBuffer(_this, VData->cur
 INLINE static uint8_t* NextBuffer(_THIS) { return GetBuffer(_this, ((VData->currBuffer + 1) % VOUT_NUM_BUFFERS)); }
 
 
-
+#if 1
 INLINE static int32_t IsFlipPending(_THIS) {
 	return sceVideoOutIsFlipPending(Handle(_this)) > 0;
 }
@@ -89,14 +92,14 @@ INLINE static void WaitOnFlip(_THIS) {
 		//);	// assert
 	}
 }
-
+#else
 //INLINE bool GetFlipStatus(_THIS,SceVideoOutFlipStatus *status) {
 //	return SCE_OK == sceVideoOutGetFlipStatus(Handle(), status);
 //}
 
 // sceVideoOutGetResolutionStatus
-#if 0
-INLINE static void WaitOnFlip(size_t arg) {
+
+INLINE static void WaitOnFlip(_THIS, size_t arg) {
 	int out = 0;
 	SceKernelEvent ev;
 	SceVideoOutFlipStatus status;
@@ -105,7 +108,9 @@ INLINE static void WaitOnFlip(size_t arg) {
 		GetFlipStatus(&status);
 		if (status.flipArg >= arg)
 			return;
-		(SCE_OK == sceKernelWaitEqueue(flipQueue, &ev, 1, &out, 0));	// assert
+		if (SCE_OK != sceKernelWaitEqueue(VData->flipQueue, &ev, 1, &out, 0)) {
+			printf("ERROR sceKernelWaitEqueue() failed!\n"); return;
+		};	// assert
 	}
 }
 #endif
@@ -119,6 +124,8 @@ INLINE static void SubmitFlip(_THIS) //s64 buffer = -1, u64 arg = 0)
 	//printf("SubmitFlip() Buffer[%d] %p \n", currBuffer, (u8*)CurrentBuffer());
 
 	VData->currBuffer = ((VData->currBuffer + 1) % BufferCount(_this));
+
+	WaitOnFlip(_this);
 }
 
 
@@ -211,7 +218,7 @@ static int vout_init(_THIS)
 	VData->attr.width	= VData->width;
 	VData->attr.height	= VData->height;
 	VData->attr.aspectRatio	= SCE_VIDEO_OUT_ASPECT_RATIO_16_9;
-	VData->attr.pixelFormat	= SCE_VIDEO_OUT_PIXEL_FORMAT_A8R8G8B8_SRGB;
+	VData->attr.pixelFormat	= SCE_VIDEO_OUT_PIXEL_FORMAT_A8B8G8R8_SRGB;
 	VData->attr.tilingMode	= SCE_VIDEO_OUT_TILING_MODE_LINEAR; // (!tile) ? : 0;		// change to tiled later, GpuMode must be NEO for pro
 	VData->attr.pitchInPixel= VData->width;
 

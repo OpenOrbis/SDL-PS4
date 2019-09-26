@@ -267,10 +267,12 @@ SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list
     char *message;
     size_t len;
 
+#ifndef PS4
     /* Nothing to do if we don't have an output function */
     if (!SDL_log_function) {
         return;
     }
+#endif
 
     /* Make sure we don't exceed array bounds */
     if ((int)priority < 0 || priority >= SDL_NUM_LOG_PRIORITIES) {
@@ -301,8 +303,9 @@ SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list
 
 #ifdef PS4
 	printf(message);	// just fucking do it 
-#endif
+#else
     SDL_log_function(SDL_log_userdata, category, priority, message);
+#endif
     SDL_stack_free(message);
 }
 
