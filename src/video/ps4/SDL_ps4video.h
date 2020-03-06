@@ -26,7 +26,11 @@
 #include "../../SDL_internal.h"
 #include "../SDL_sysvideo.h"
 
+#ifdef OO
+#include <VideoOut.h>
+#else
 #include <video_out.h>
+#endif
 
 #define VOUT_NUM_BUFFERS 2
 

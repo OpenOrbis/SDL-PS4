@@ -64,7 +64,7 @@
 
 #include "SDL_assert.h"
 
-#ifndef __NACL__
+#if !defined(__NACL__) && !defined(__ORBIS__) && !defined(PS4)
 /* List of signals to mask in the subthreads */
 static const int sig_list[] = {
     SIGHUP, SIGINT, SIGQUIT, SIGPIPE, SIGALRM, SIGTERM, SIGCHLD, SIGWINCH,

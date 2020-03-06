@@ -1,11 +1,15 @@
 ﻿{
   "environments": [
     {
-      // Could set things up here instead of the toolchain file, instead make this global env. and use a TOOLCHAIN var
-      //"INCLUDE": "${env.INCLUDE};",
-
-      "TOOLCHAIN_FILE": "ps4sdk.cmake",
-      "environment": "toolchain.generic"
+      "BuildPath": "${projectDir}\\out\\build\\${name}",
+      "InstallPath": "${projectDir}\\out\\install\\${name}"
+    },
+    {
+      "name": "clang_ext",
+      "namespace": "cl",
+      "inheritEnvironments": [ "clang_cl_x64" ],
+      "cc": "clang",
+      "cxx": "clang++"
     }
   ],
   "configurations": [
@@ -23,16 +27,33 @@
       "ctestCommandArgs": ""
     },
     {
+      "name": "PS4 OpenOrbis",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+
+      "buildRoot": "${env.BuildPath}",
+      "installRoot": "${env.InstallPath}",
+
+      "cmakeToolchain": "${projectDir}\\cmake\\oosdk.cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+
+      "inheritEnvironments": [ "clang_ext" ],
+      "variables": []
+    },
+    {
       //"variables": [ { "TOOLCHAIN_FILE": "ps4sdk.cmake" } ],   // This doesn't seem to override toolchain.generic:: [env.]TOOLCHAIN_FILE , or pass to the cmake cache
 
-      "name": "PS4 SDK",
+      "name": "PS4 (SCEI) SDK",
       "generator": "Ninja",
       "description": "TemplateDescription_Localize_PS4SDK",
       "configurationType": "RelWithDebInfo",
       "inheritEnvironments": [ "toolchain.generic" ],
       "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
       "installRoot": "D:\\dev\\orbis_sdk_500\\portlibs\\SDL",
-      "cmakeCommandArgs": "-DCMAKE_TOOLCHAIN_FILE=${projectDir}\\cmake\\ps4sdk.cmake", // ${projectDir}/cmake/${env.TOOLCHAIN_FILE}
+      "cmakeToolchain": "${projectDir}\\cmake\\ps4sdk.cmake",
+      "cmakeCommandArgs": "", // ${projectDir}/cmake/${env.TOOLCHAIN_FILE}
       "buildCommandArgs": "-v",
       "ctestCommandArgs": ""
     }
