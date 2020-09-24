@@ -1,5 +1,5 @@
 
-                         Simple DirectMedia Layer
+                         Simple DirectMedia Layer ( For Sony Playstation4 SDK -Z )
 
                                   (SDL)
 
